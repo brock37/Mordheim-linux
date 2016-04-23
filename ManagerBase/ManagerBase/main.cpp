@@ -1,5 +1,5 @@
 #include <QApplication>
-
+// this is a comment
 #include "window.h"
 
 int main(int argc, char **argv)
