@@ -129,7 +129,7 @@ void Window::setFilter(QString raceFilter, QString rangFilter, QString nameFilte
 
 void Window::changeFilter()
 {
-    setFilter(m_raceComboBox->currentText(), m_rangComboBox->currentText(), m_nomEdit);
+    setFilter(m_raceComboBox->currentText(), m_rangComboBox->currentText(), m_nomEdit->text());
 }
 
 void Window::addProfil()
