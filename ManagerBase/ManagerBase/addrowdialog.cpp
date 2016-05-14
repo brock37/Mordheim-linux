@@ -132,9 +132,9 @@ void AddRowDialog::submit(){
 
     if( nom.isEmpty() ){
         QMessageBox::information( this, "Ajouter profil", "Ajouter un nom au profil");
-        return;
     }
     else{
+
         accept();
     }
 

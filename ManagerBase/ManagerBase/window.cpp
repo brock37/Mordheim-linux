@@ -28,7 +28,8 @@ Window::Window(QWidget *parent) :
     m_ajouterButton= new QPushButton("Add");
 
 
-    QObject::connect( m_raceComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setFilter(QString)));
+    QObject::connect( m_raceComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setRaceFilter(QString)));
+    QObject::connect( m_rangComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(setRangFilter(QString)));
     QObject::connect( m_ajouterButton, SIGNAL(clicked()), this, SLOT( addProfil()));
 
 
@@ -78,9 +79,15 @@ void Window::setupModel()
 
 }
 
-void Window::setFilter(QString index)
+void Window::setRaceFilter(QString index)
 {
     QString filter= QString("nom_race='%1'").arg(index);
+    m_model->setFilter( filter);
+}
+
+void Window::setRangFilter(QString index)
+{
+    QString filter= QString("nom_rang='%1'").arg(index);
     m_model->setFilter( filter);
 }
 

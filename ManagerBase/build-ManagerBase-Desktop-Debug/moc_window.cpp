@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_Window_t {
-    QByteArrayData data[5];
-    char stringdata[34];
+    QByteArrayData data[6];
+    char stringdata[52];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -30,12 +30,14 @@ struct qt_meta_stringdata_Window_t {
 static const qt_meta_stringdata_Window_t qt_meta_stringdata_Window = {
     {
 QT_MOC_LITERAL(0, 0, 6),
-QT_MOC_LITERAL(1, 7, 9),
-QT_MOC_LITERAL(2, 17, 0),
-QT_MOC_LITERAL(3, 18, 5),
-QT_MOC_LITERAL(4, 24, 9)
+QT_MOC_LITERAL(1, 7, 13),
+QT_MOC_LITERAL(2, 21, 0),
+QT_MOC_LITERAL(3, 22, 5),
+QT_MOC_LITERAL(4, 28, 13),
+QT_MOC_LITERAL(5, 42, 9)
     },
-    "Window\0setFilter\0\0index\0addProfil"
+    "Window\0setRaceFilter\0\0index\0setRangFilter\0"
+    "addProfil"
 };
 #undef QT_MOC_LITERAL
 
@@ -45,7 +47,7 @@ static const uint qt_meta_data_Window[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -53,10 +55,12 @@ static const uint qt_meta_data_Window[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    1,   24,    2, 0x0a /* Public */,
-       4,    0,   27,    2, 0x0a /* Public */,
+       1,    1,   29,    2, 0x0a /* Public */,
+       4,    1,   32,    2, 0x0a /* Public */,
+       5,    0,   35,    2, 0x0a /* Public */,
 
  // slots: parameters
+    QMetaType::Void, QMetaType::QString,    3,
     QMetaType::Void, QMetaType::QString,    3,
     QMetaType::Void,
 
@@ -68,8 +72,9 @@ void Window::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
     if (_c == QMetaObject::InvokeMetaMethod) {
         Window *_t = static_cast<Window *>(_o);
         switch (_id) {
-        case 0: _t->setFilter((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 1: _t->addProfil(); break;
+        case 0: _t->setRaceFilter((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 1: _t->setRangFilter((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 2: _t->addProfil(); break;
         default: ;
         }
     }
@@ -100,13 +105,13 @@ int Window::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 3)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }

@@ -22,7 +22,8 @@ public:
 signals:
 
 public slots:
-    void setFilter(QString index);
+    void setRaceFilter(QString index);
+    void setRangFilter(QString index);
     void addProfil();
 
 private:
