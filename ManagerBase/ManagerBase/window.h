@@ -18,21 +18,25 @@ class Window : public QWidget
 public:
     explicit Window(QWidget *parent = 0);
     void setupModel();
+    QGroupBox *createFilterGroupBox();
+    void setFilter(QString raceFilter, QString rangFilter="", QString nameFilter="");
+    QString getRaceFilter(int index);
+    QString getRangFilter(int index);
 
 signals:
 
 public slots:
-    void setRaceFilter(QString index);
-    void setRangFilter(QString index);
+    void changeFilter();
     void addProfil();
 
 private:
 
 
-    QGridLayout *m_layout;
+    QVBoxLayout *m_layout;
 
     QComboBox *m_raceComboBox;
     QComboBox *m_rangComboBox;
+
 
     QLabel *m_nomLabel;
     QLineEdit *m_nomEdit;
