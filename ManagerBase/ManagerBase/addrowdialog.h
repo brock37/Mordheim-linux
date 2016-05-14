@@ -12,6 +12,7 @@
 #include <QSpinBox>
 
 #include <QSqlRelationalTableModel>
+#include <QSqlRecord>
 #include <QComboBox>
 #include <QMessageBox>
 
@@ -23,6 +24,7 @@ public:
     explicit AddRowDialog( QSqlRelationalTableModel *profil, QWidget *parent = 0);
     QGroupBox* createInputsWidget();
     QDialogButtonBox* createButtonBox();
+    int findRaceId(QString race);
 
 
 signals:

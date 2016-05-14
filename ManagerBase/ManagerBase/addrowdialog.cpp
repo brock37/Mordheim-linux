@@ -125,6 +125,22 @@ QDialogButtonBox* AddRowDialog::createButtonBox()
 
 }
 
+int AddRowDialog::findRaceId(QString race)
+{
+    QSqlTableModel *model= m_model->relationModel(m_model->fieldIndex("nom_rang"));
+    int index= 0;
+
+    while( index < model->rowCount()){
+        QSqlRecord record= model->record( index);
+        if( record.value("nom_rang") == race)
+            return index;
+        else
+            index++;
+    }
+
+    return index;
+}
+
 
 void AddRowDialog::submit(){
 
