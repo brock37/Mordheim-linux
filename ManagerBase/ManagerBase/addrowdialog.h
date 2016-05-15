@@ -23,8 +23,10 @@ class AddRowDialog : public QDialog
 public:
     explicit AddRowDialog( QSqlRelationalTableModel *profil, QWidget *parent = 0);
     QGroupBox* createInputsWidget();
+    QGroupBox* createIdInputsWidget();
     QDialogButtonBox* createButtonBox();
     int findRaceId(QString race);
+    int addNewRace(QString race);
 
 
 signals:
@@ -38,7 +40,7 @@ private:
     QComboBox *raceCombo;
     QComboBox *rangCombo;
 
-
+    QLineEdit *raceLineEdit;
     QLineEdit *nomEdit;
 
     QSpinBox *prixEdit;
