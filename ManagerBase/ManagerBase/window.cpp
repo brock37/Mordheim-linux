@@ -1,5 +1,7 @@
 #include "window.h"
 
+extern int uniqueRaceId;
+
 Window::Window(QWidget *parent) :
     QWidget(parent)
 {
@@ -7,6 +9,8 @@ Window::Window(QWidget *parent) :
     setupModel();
 
     QGroupBox *box= createFilterGroupBox();
+
+    uniqueRaceId= m_raceComboBox->count();
 
     m_view= new QTableView;
     m_view->setModel( m_model);

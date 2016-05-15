@@ -1,5 +1,7 @@
 #include "addrowdialog.h"
 
+int uniqueRaceId;
+
 AddRowDialog::AddRowDialog(QSqlRelationalTableModel *profil, QWidget *parent) :
     QDialog(parent)
 {
@@ -130,7 +132,7 @@ QDialogButtonBox* AddRowDialog::createButtonBox()
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
 
     QDialogButtonBox *buttonBox= new QDialogButtonBox;
-    buttonBox->addButton(submitButton, QDialogButtonBox::ResetRole);
+    buttonBox->addButton(submitButton, QDialogButtonBox::AcceptRole);
     buttonBox->addButton(closeButton, QDialogButtonBox::RejectRole);
 
     return buttonBox;
@@ -139,37 +141,58 @@ QDialogButtonBox* AddRowDialog::createButtonBox()
 
 int AddRowDialog::findRaceId(QString race)
 {
-    QSqlTableModel *model= m_model->relationModel(m_model->fieldIndex("nom_rang"));
+    QSqlTableModel *model= m_model->relationModel(m_model->fieldIndex("nom_race"));
     int index= 0;
 
     while( index < model->rowCount()){
         QSqlRecord record= model->record( index);
-        if( record.value("nom_rang") == race)
+        if( record.value("nom_race") == race)
             return index;
         else
             index++;
     }
 
-    return index;
+    return addNewRace(race);
 }
 
 int AddRowDialog::addNewRace(QString race)
 {
-    return 0;
+    QSqlTableModel *raceModel= m_model->relationModel(m_model->fieldIndex("nom_race"));
+    QSqlRecord record;
+    int id = generateRaceId();
+
+    QSqlField f1("ID", QVariant::Int);
+    QSqlField f2("nom_race", QVariant::String);
+
+    f1.setValue(QVariant(id));
+    f2.setValue(QVariant(race));
+    record.append(f1);
+    record.append(f2);
+
+    raceModel->insertRecord(-1, record);
+    return id;
 }
 
 
-void AddRowDialog::submit(){
-
+void AddRowDialog::submit()
+{
+    QString nom_race= raceCombo->currentText();
     QString nom= nomEdit->text();
 
-    if( nom.isEmpty() ){
-        QMessageBox::information( this, "Ajouter profil", "Ajouter un nom au profil");
+    if( nom.isEmpty() || nom_race.isEmpty() ){
+        QMessageBox::information( this, "Ajouter profil", "Ajouter un nom et une race au profil");
     }
     else{
-
+        int raceId= findRaceId( nom_race);
         accept();
+        //close();
     }
 
 
+}
+
+int AddRowDialog::generateRaceId()
+{
+    uniqueRaceId += 1;
+    return uniqueRaceId;
 }

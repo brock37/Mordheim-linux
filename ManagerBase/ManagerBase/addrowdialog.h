@@ -13,6 +13,7 @@
 
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
+#include <QSqlField>
 #include <QComboBox>
 #include <QMessageBox>
 
@@ -27,6 +28,7 @@ public:
     QDialogButtonBox* createButtonBox();
     int findRaceId(QString race);
     int addNewRace(QString race);
+    int generateRaceId();
 
 
 signals:
