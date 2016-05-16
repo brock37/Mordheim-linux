@@ -1,6 +1,7 @@
 #include "addrowdialog.h"
 
 int uniqueRaceId;
+int uniqueProfilId;
 
 AddRowDialog::AddRowDialog(QSqlRelationalTableModel *profil, QWidget *parent) :
     QDialog(parent)
@@ -36,7 +37,7 @@ QGroupBox *AddRowDialog::createInputsWidget()
     QLabel *CdLabel= new QLabel("Cd:");
 
 
-    prixEdit= new QSpinBox;
+    prixSpinBox= new QSpinBox;
     MSpinBox= new QSpinBox;
     CcSpinBox= new QSpinBox;
     CtSpinBox= new QSpinBox;
@@ -50,7 +51,7 @@ QGroupBox *AddRowDialog::createInputsWidget()
     QGridLayout *layout= new QGridLayout;
 
     layout->addWidget( prixLabel, 1, 0);
-    layout->addWidget( prixEdit, 1, 1);
+    layout->addWidget( prixSpinBox, 1, 1);
 
     layout->addWidget( MLabel, 2, 0);
     layout->addWidget( MSpinBox, 2, 1);
@@ -147,7 +148,7 @@ int AddRowDialog::findRaceId(QString race)
     while( index < model->rowCount()){
         QSqlRecord record= model->record( index);
         if( record.value("nom_race") == race)
-            return index;
+            return record.value("id").toInt();
         else
             index++;
     }
@@ -173,10 +174,97 @@ int AddRowDialog::addNewRace(QString race)
     return id;
 }
 
+int AddRowDialog::addNewProfil(int raceId, int rangId, QString nom, QMap<QString, int> input)
+{
+    int id=generateProfilId();
+
+    QSqlRecord record;
+
+    QSqlField f1("ID", QVariant::Int);
+    QSqlField f2("id_race", QVariant::Int);
+    QSqlField f3("id_rang", QVariant::Int);
+    QSqlField f4("Nom", QVariant::String);
+    QSqlField f5("Prix", QVariant::Int);
+    QSqlField f6("M", QVariant::Int);
+    QSqlField f7("CC", QVariant::Int);
+    QSqlField f8("CT", QVariant::Int);
+    QSqlField f9("F", QVariant::Int);
+    QSqlField f10("E", QVariant::Int);
+    QSqlField f11("PV", QVariant::Int);
+    QSqlField f12("I", QVariant::Int);
+    QSqlField f13("A", QVariant::Int);
+    QSqlField f14("Cd", QVariant::Int);
+    QSqlField f15("Arme_Armure", QVariant::String);
+    QSqlField f16("Regle", QVariant::Int);
+
+    f1.setValue(QVariant(id));
+    f2.setValue(QVariant(raceId));
+    f3.setValue(QVariant(rangId));
+    f4.setValue(QVariant(nom));
+    f5.setValue(QVariant(input.value("prix")));
+    f6.setValue(QVariant(input.value("M")));
+    f7.setValue(QVariant(input.value("Cc")));
+    f8.setValue(QVariant(input.value("Ct")));
+    f9.setValue(QVariant(input.value("F")));
+    f10.setValue(QVariant(input.value("E")));
+    f11.setValue(QVariant(input.value("Pv")));
+    f12.setValue(QVariant(input.value("I")));
+    f13.setValue(QVariant(input.value("A")));
+    f14.setValue(QVariant(input.value("Cd")));
+    f15.setValue(QVariant(""));
+    f16.setValue(QVariant(0));
+
+    record.append(f1);
+    record.append(f2);
+    record.append(f3);
+    record.append(f4);
+    record.append(f5);
+    record.append(f6);
+    record.append(f7);
+    record.append(f8);
+    record.append(f9);
+    record.append(f10);
+    record.append(f11);
+    record.append(f12);
+    record.append(f13);
+    record.append(f14);
+    record.append(f15);
+    record.append(f16);
+
+
+    if(!m_model->insertRecord(-1, record))
+        qDebug() << "Ajout a la base";
+    else
+        qDebug()<< "Erreur insertion: " << m_model->lastError().text();
+
+
+    return id;
+}
+
+QMap<QString, int> AddRowDialog::getFeatures()
+{
+    QMap<QString, int> features;
+
+    features.insert("prix", prixSpinBox->value());
+    features.insert("M", MSpinBox->value());
+    features.insert("Cc", CcSpinBox->value());
+    features.insert("Ct", CtSpinBox->value());
+    features.insert("F", FSpinBox->value());
+    features.insert("E", ESpinBox->value());
+    features.insert("Pv", PvSpinBox->value());
+    features.insert("I", ISpinBox->value());
+    features.insert("A", ASpinBox->value());
+    features.insert("Cd", CdSpinBox->value());
+
+    return features;
+}
+
 
 void AddRowDialog::submit()
 {
     QString nom_race= raceCombo->currentText();
+    int index_rang= rangCombo->currentIndex();
+    qDebug() << "rang id:" << index_rang ;
     QString nom= nomEdit->text();
 
     if( nom.isEmpty() || nom_race.isEmpty() ){
@@ -184,8 +272,14 @@ void AddRowDialog::submit()
     }
     else{
         int raceId= findRaceId( nom_race);
+        qDebug() << "Race id:" << raceId ;
+
+        QMap<QString, int> featuresList= getFeatures();
+        qDebug() << "features:" << featuresList.value("prix");
+        int profilId= addNewProfil(raceId, index_rang, nom, featuresList);
+        qDebug() << "profil id:" << profilId ;
+
         accept();
-        //close();
     }
 
 
@@ -195,4 +289,10 @@ int AddRowDialog::generateRaceId()
 {
     uniqueRaceId += 1;
     return uniqueRaceId;
+}
+
+int AddRowDialog::generateProfilId()
+{
+    uniqueProfilId += 1;
+    return uniqueProfilId;
 }

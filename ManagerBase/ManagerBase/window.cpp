@@ -1,6 +1,7 @@
 #include "window.h"
 
 extern int uniqueRaceId;
+extern int uniqueProfilId;
 
 Window::Window(QWidget *parent) :
     QWidget(parent)
@@ -10,6 +11,7 @@ Window::Window(QWidget *parent) :
 
     QGroupBox *box= createFilterGroupBox();
 
+    uniqueProfilId= m_model->rowCount();
     uniqueRaceId= m_raceComboBox->count();
 
     m_view= new QTableView;
@@ -19,6 +21,8 @@ Window::Window(QWidget *parent) :
     m_ajouterButton= new QPushButton("Add");
 
     QObject::connect( m_ajouterButton, SIGNAL(clicked()), this, SLOT( addProfil()));
+
+
 
     m_layout= new QVBoxLayout;
     m_layout->addWidget( box);
@@ -49,7 +53,6 @@ void Window::setupModel()
 
     m_model= new QSqlRelationalTableModel(this);
     m_model->setTable("ref_profil");
-    m_model->setEditStrategy(QSqlTableModel::OnManualSubmit);
 
     raceIndex= m_model->fieldIndex("id_race");
     rangIndex= m_model->fieldIndex("id_rang");
@@ -142,6 +145,8 @@ void Window::addProfil()
     int accepted= dialog->exec();
 
     if(accepted == 1){
-        QMessageBox::information(0,"Ajout profil" ,"Profil ajouter", QMessageBox::Cancel);
+        int lastRow = m_model->rowCount() - 1;
+        m_view->selectRow(lastRow);
+        m_view->scrollToBottom();
     }
 }

@@ -10,6 +10,8 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QDebug>
+#include <QSqlError>
 
 #include <QSqlRelationalTableModel>
 #include <QSqlRecord>
@@ -26,9 +28,12 @@ public:
     QGroupBox* createInputsWidget();
     QGroupBox* createIdInputsWidget();
     QDialogButtonBox* createButtonBox();
+    QMap<QString, int> getFeatures();
     int findRaceId(QString race);
     int addNewRace(QString race);
+    int addNewProfil(int raceId, int rangId, QString nom, QMap<QString, int> input);
     int generateRaceId();
+    int generateProfilId();
 
 
 signals:
@@ -45,7 +50,7 @@ private:
     QLineEdit *raceLineEdit;
     QLineEdit *nomEdit;
 
-    QSpinBox *prixEdit;
+    QSpinBox *prixSpinBox;
     QSpinBox *MSpinBox;
     QSpinBox *CcSpinBox;
     QSpinBox *CtSpinBox;
