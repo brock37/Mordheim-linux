@@ -133,7 +133,7 @@ QDialogButtonBox* AddRowDialog::createButtonBox()
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
 
     QDialogButtonBox *buttonBox= new QDialogButtonBox;
-    buttonBox->addButton(submitButton, QDialogButtonBox::AcceptRole);
+    buttonBox->addButton(submitButton, QDialogButtonBox::ResetRole);
     buttonBox->addButton(closeButton, QDialogButtonBox::RejectRole);
 
     return buttonBox;
@@ -154,6 +154,22 @@ int AddRowDialog::findRaceId(QString race)
     }
 
     return addNewRace(race);
+}
+
+int AddRowDialog::findRangId(QString rang)
+{
+    QSqlTableModel *model= m_model->relationModel(m_model->fieldIndex("nom_rang"));
+    int index= 0;
+
+    while( index < model->rowCount()){
+        QSqlRecord record= model->record( index);
+        if( record.value("nom_rang") == rang)
+            return record.value("id").toInt();
+        else
+            index++;
+    }
+    qDebug() << "id Rang non touver. Index= " << index;
+    return 0;
 }
 
 int AddRowDialog::addNewRace(QString race)
@@ -231,13 +247,11 @@ int AddRowDialog::addNewProfil(int raceId, int rangId, QString nom, QMap<QString
     record.append(f15);
     record.append(f16);
 
-
-    if(!m_model->insertRecord(-1, record))
-        qDebug() << "Ajout a la base";
-    else
+    bool insert= m_model->insertRecord(-1, record);
+    if(insert)
         qDebug()<< "Erreur insertion: " << m_model->lastError().text();
-
-
+    else
+        qDebug() << "Ajout a la base";
     return id;
 }
 
@@ -263,7 +277,7 @@ QMap<QString, int> AddRowDialog::getFeatures()
 void AddRowDialog::submit()
 {
     QString nom_race= raceCombo->currentText();
-    int index_rang= rangCombo->currentIndex();
+    QString nom_rang= rangCombo->currentText();
 
     QString nom= nomEdit->text();
 
@@ -272,10 +286,11 @@ void AddRowDialog::submit()
     }
     else{
         int raceId= findRaceId( nom_race);
+        int rangId= findRangId( nom_rang);
 
 
         QMap<QString, int> featuresList= getFeatures();
-        int profilId= addNewProfil(raceId, index_rang, nom, featuresList);
+        int profilId= addNewProfil(raceId, rangId, nom, featuresList);
 
 
         accept();

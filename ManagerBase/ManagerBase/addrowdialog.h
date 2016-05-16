@@ -30,6 +30,7 @@ public:
     QDialogButtonBox* createButtonBox();
     QMap<QString, int> getFeatures();
     int findRaceId(QString race);
+    int findRangId(QString rang);
     int addNewRace(QString race);
     int addNewProfil(int raceId, int rangId, QString nom, QMap<QString, int> input);
     int generateRaceId();
