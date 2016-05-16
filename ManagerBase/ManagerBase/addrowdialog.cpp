@@ -264,7 +264,7 @@ void AddRowDialog::submit()
 {
     QString nom_race= raceCombo->currentText();
     int index_rang= rangCombo->currentIndex();
-    qDebug() << "rang id:" << index_rang ;
+
     QString nom= nomEdit->text();
 
     if( nom.isEmpty() || nom_race.isEmpty() ){
@@ -272,12 +272,11 @@ void AddRowDialog::submit()
     }
     else{
         int raceId= findRaceId( nom_race);
-        qDebug() << "Race id:" << raceId ;
+
 
         QMap<QString, int> featuresList= getFeatures();
-        qDebug() << "features:" << featuresList.value("prix");
         int profilId= addNewProfil(raceId, index_rang, nom, featuresList);
-        qDebug() << "profil id:" << profilId ;
+
 
         accept();
     }
