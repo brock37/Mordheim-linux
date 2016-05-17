@@ -19,7 +19,9 @@ public:
     explicit Window(QWidget *parent = 0);
     void setupModel();
     QGroupBox *createFilterGroupBox();
+    QDialogButtonBox *createFilterButtonBox();
     void setFilter(QString raceFilter, QString rangFilter="", QString nameFilter="");
+    void resetBoxFilter();
     QString getRaceFilter(int index);
     QString getRangFilter(int index);
 
@@ -27,6 +29,8 @@ signals:
 
 public slots:
     void changeFilter();
+    void applyFilter();
+    void resetFilter();
     void addProfil();
 
 private:
@@ -40,7 +44,6 @@ private:
 
     QLabel *m_nomLabel;
     QLineEdit *m_nomEdit;
-
     QPushButton *m_ajouterButton;
 
     QTableView *m_view;
