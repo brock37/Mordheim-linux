@@ -133,7 +133,7 @@ QDialogButtonBox* AddRowDialog::createButtonBox()
     connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
 
     QDialogButtonBox *buttonBox= new QDialogButtonBox;
-    buttonBox->addButton(submitButton, QDialogButtonBox::ResetRole);
+    buttonBox->addButton(submitButton, QDialogButtonBox::AcceptRole);
     buttonBox->addButton(closeButton, QDialogButtonBox::RejectRole);
 
     return buttonBox;
@@ -147,13 +147,17 @@ int AddRowDialog::findRaceId(QString race)
 
     while( index < model->rowCount()){
         QSqlRecord record= model->record( index);
-        if( record.value("nom_race") == race)
-            return record.value("id").toInt();
+        if( record.value("nom_race") == race){
+            qDebug() << "id Race touver - id =" << record.value("ID").toInt();
+            return record.value("ID").toInt();
+        }
         else
             index++;
     }
 
-    return addNewRace(race);
+    qDebug() << "id Race non touver Creation d'une nouvelle race";
+    int idRace= addNewRace(race);
+    return idRace;
 }
 
 int AddRowDialog::findRangId(QString rang)
@@ -172,6 +176,7 @@ int AddRowDialog::findRangId(QString rang)
     return 0;
 }
 
+
 int AddRowDialog::addNewRace(QString race)
 {
     QSqlTableModel *raceModel= m_model->relationModel(m_model->fieldIndex("nom_race"));
@@ -186,19 +191,31 @@ int AddRowDialog::addNewRace(QString race)
     record.append(f1);
     record.append(f2);
 
-    raceModel->insertRecord(-1, record);
-    return id;
+    bool insert= raceModel->insertRecord(-1, record);
+
+
+    if(!insert)
+        qDebug()<< "Creation Race \Erreur insertion: " << raceModel->lastError().text();
+    else{
+        qDebug() << "id RaCE Creer. Index= " << id;
+
+    }
+return id;
+
 }
 
-int AddRowDialog::addNewProfil(int raceId, int rangId, QString nom, QMap<QString, int> input)
+
+int AddRowDialog::addNewProfil( int rangId, int raceId, QString nom, QMap<QString, int> input)
 {
     int id=generateProfilId();
+
+    m_model->select();
 
     QSqlRecord record;
 
     QSqlField f1("ID", QVariant::Int);
-    QSqlField f2("id_race", QVariant::Int);
-    QSqlField f3("id_rang", QVariant::Int);
+    QSqlField f2("id_rang", QVariant::Int);
+    QSqlField f3("id_race", QVariant::Int);
     QSqlField f4("Nom", QVariant::String);
     QSqlField f5("Prix", QVariant::Int);
     QSqlField f6("M", QVariant::Int);
@@ -214,8 +231,8 @@ int AddRowDialog::addNewProfil(int raceId, int rangId, QString nom, QMap<QString
     QSqlField f16("Regle", QVariant::Int);
 
     f1.setValue(QVariant(id));
-    f2.setValue(QVariant(raceId));
-    f3.setValue(QVariant(rangId));
+    f2.setValue(QVariant(rangId));
+    f3.setValue(QVariant(raceId));
     f4.setValue(QVariant(nom));
     f5.setValue(QVariant(input.value("prix")));
     f6.setValue(QVariant(input.value("M")));
@@ -227,12 +244,13 @@ int AddRowDialog::addNewProfil(int raceId, int rangId, QString nom, QMap<QString
     f12.setValue(QVariant(input.value("I")));
     f13.setValue(QVariant(input.value("A")));
     f14.setValue(QVariant(input.value("Cd")));
-    f15.setValue(QVariant(""));
+    f15.setValue(QVariant(" "));
     f16.setValue(QVariant(0));
 
     record.append(f1);
     record.append(f2);
     record.append(f3);
+//    qDebug() << record.value("id_race");
     record.append(f4);
     record.append(f5);
     record.append(f6);
@@ -248,8 +266,8 @@ int AddRowDialog::addNewProfil(int raceId, int rangId, QString nom, QMap<QString
     record.append(f16);
 
     bool insert= m_model->insertRecord(-1, record);
-    if(insert)
-        qDebug()<< "Erreur insertion: " << m_model->lastError().text();
+    if(!insert)
+        qDebug()<< "Ajout Profil \nErreur insertion: " << m_model->lastError().text();
     else
         qDebug() << "Ajout a la base";
     return id;
@@ -287,16 +305,12 @@ void AddRowDialog::submit()
     else{
         int raceId= findRaceId( nom_race);
         int rangId= findRangId( nom_rang);
-
-
         QMap<QString, int> featuresList= getFeatures();
-        int profilId= addNewProfil(raceId, rangId, nom, featuresList);
 
+        int profilId= addNewProfil(rangId, raceId, nom, featuresList);
 
         accept();
     }
-
-
 }
 
 int AddRowDialog::generateRaceId()

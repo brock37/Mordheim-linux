@@ -59,7 +59,7 @@ void Window::setupModel()
     raceIndex= m_model->fieldIndex("id_race");
     rangIndex= m_model->fieldIndex("id_rang");
 
-    m_model->setRelation(raceIndex, QSqlRelation("race", "id", "nom_race"));
+    m_model->setRelation(raceIndex, QSqlRelation("race", "ID", "nom_race"));
     m_model->setRelation(rangIndex, QSqlRelation( "rang", "id", "nom_rang"));
 
     m_model->select();
@@ -191,4 +191,5 @@ void Window::addProfil()
         m_view->selectRow(lastRow);
         m_view->scrollToBottom();
     }
+    qDebug() << m_model->lastError().text();
 }

@@ -32,7 +32,7 @@ public:
     int findRaceId(QString race);
     int findRangId(QString rang);
     int addNewRace(QString race);
-    int addNewProfil(int raceId, int rangId, QString nom, QMap<QString, int> input);
+    int addNewProfil(int rangId, int raceId, QString nom, QMap<QString, int> input);
     int generateRaceId();
     int generateProfilId();
 
