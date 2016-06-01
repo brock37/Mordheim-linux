@@ -28,7 +28,7 @@ Window::Window(QWidget *parent) :
     m_layout->addWidget( editButton);
     this->setLayout( m_layout);
 
-    //this->resize(920,600);
+    this->resize(920,600);
 
 }
 
@@ -153,30 +153,30 @@ void Window::setFilter(QString raceFilter, QString rangFilter, QString nameFilte
 {
     QString filter;
 
+    if( raceFilter != ""){
+        filter.append(QString("nom_race='%1'").arg(raceFilter));
+    }
 
-    if(raceFilter != "" ){
-        if(rangFilter != ""){
-            if( nameFilter != ""){
-                filter= QString("nom_race='%1' AND nom_rang='%2' AND Nom='%3'").arg(raceFilter).arg(rangFilter).arg(nameFilter);
-            }
-            else{
-                filter= QString("nom_race='%1' AND nom_rang='%2'").arg(raceFilter).arg(rangFilter);
-            }
+    if(!rangFilter.isEmpty()){
+        if(filter.isEmpty()){
+            filter.append(QString("nom_rang='%1'").arg(rangFilter));
         }
         else{
-            filter= QString("nom_race='%1'").arg(raceFilter);
+            filter.append(QString("AND nom_rang='%1'").arg(rangFilter));
         }
     }
-    else{
-        if(rangFilter != ""){
-            if( nameFilter != ""){
-                filter= QString("nom_rang='%2' AND Nom='%3'").arg(rangFilter).arg(nameFilter);
-            }
-            else{
-                filter= QString("nom_rang='%1'").arg(rangFilter);
-            }
+
+    if(!nameFilter.isEmpty()){
+        if(filter.isEmpty()){
+            filter.append(QString("Nom='%1'").arg(nameFilter));
+        }
+        else{
+            filter.append(QString(" AND Nom='%1'").arg(nameFilter));
         }
     }
+
+
+    qDebug() << QString("Filter: '%1'").arg(filter);
 
 
     m_model->setFilter( filter);

@@ -21,7 +21,7 @@ public:
     QGroupBox *createFilterGroupBox();
     QDialogButtonBox *createFilterButtonBox();
     QDialogButtonBox *createEditDatabaseButtonBox();
-    void setFilter(QString raceFilter, QString rangFilter="", QString nameFilter="");
+    void setFilter(QString raceFilter="", QString rangFilter="", QString nameFilter="");
     void resetBoxFilter();
     QString getRaceFilter(int index);
     QString getRangFilter(int index);
