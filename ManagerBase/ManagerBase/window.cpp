@@ -153,6 +153,7 @@ void Window::setFilter(QString raceFilter, QString rangFilter, QString nameFilte
 {
     QString filter;
 
+
     if(raceFilter != "" ){
         if(rangFilter != ""){
             if( nameFilter != ""){

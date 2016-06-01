@@ -195,7 +195,7 @@ int AddRowDialog::addNewRace(QString race)
 
 
     if(!insert)
-        qDebug()<< "Creation Race \Erreur insertion: " << raceModel->lastError().text();
+        qDebug()<< "Creation Race - Erreur insertion: " << raceModel->lastError().text();
     else{
         qDebug() << "id RaCE Creer. Index= " << id;
 
@@ -250,7 +250,6 @@ int AddRowDialog::addNewProfil( int rangId, int raceId, QString nom, QMap<QStrin
     record.append(f1);
     record.append(f2);
     record.append(f3);
-//    qDebug() << record.value("id_race");
     record.append(f4);
     record.append(f5);
     record.append(f6);
