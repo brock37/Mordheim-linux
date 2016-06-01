@@ -20,18 +20,20 @@ public:
     void setupModel();
     QGroupBox *createFilterGroupBox();
     QDialogButtonBox *createFilterButtonBox();
+    QDialogButtonBox *createEditDatabaseButtonBox();
     void setFilter(QString raceFilter, QString rangFilter="", QString nameFilter="");
     void resetBoxFilter();
     QString getRaceFilter(int index);
     QString getRangFilter(int index);
+    void deleteProfilFromDatabase(QModelIndex index);
 
 signals:
 
 public slots:
-    void changeFilter();
     void applyFilter();
     void resetFilter();
     void addProfil();
+    void removeProfil();
 
 private:
 

@@ -18,16 +18,14 @@ Window::Window(QWidget *parent) :
     m_view->setModel( m_model);
     m_view->resizeColumnsToContents();
 
-    m_ajouterButton= new QPushButton("Add");
-
-    QObject::connect( m_ajouterButton, SIGNAL(clicked()), this, SLOT( addProfil()));
+    QDialogButtonBox *editButton= createEditDatabaseButtonBox();
 
 
 
     m_layout= new QVBoxLayout;
     m_layout->addWidget( box);
     m_layout->addWidget(m_view);
-    m_layout->addWidget( m_ajouterButton);
+    m_layout->addWidget( editButton);
     this->setLayout( m_layout);
 
     //this->resize(920,600);
@@ -125,6 +123,23 @@ QDialogButtonBox *Window::createFilterButtonBox()
 
 }
 
+QDialogButtonBox *Window::createEditDatabaseButtonBox()
+{
+    QPushButton *addButton= new QPushButton("Add");
+    QPushButton *removeButton= new QPushButton("Remove");
+
+    addButton->setDefault( true);
+
+    connect(addButton, SIGNAL(clicked()), this , SLOT(addProfil()));
+    connect(removeButton, SIGNAL(clicked()), this , SLOT(removeProfil()));
+
+    QDialogButtonBox *buttonBox= new QDialogButtonBox;
+    buttonBox->addButton( addButton, QDialogButtonBox::ActionRole);
+    buttonBox->addButton( removeButton, QDialogButtonBox::ActionRole);
+
+    return buttonBox;
+}
+
 void Window::resetBoxFilter()
 {
     m_raceComboBox->setCurrentIndex(-1);
@@ -166,10 +181,6 @@ void Window::setFilter(QString raceFilter, QString rangFilter, QString nameFilte
     m_model->setFilter( filter);
 }
 
-void Window::changeFilter()
-{
-    setFilter(m_raceComboBox->currentText(), m_rangComboBox->currentText(), m_nomEdit->text());
-}
 
 void Window::applyFilter()
 {
@@ -192,4 +203,34 @@ void Window::addProfil()
         m_view->scrollToBottom();
     }
     qDebug() << m_model->lastError().text();
+}
+
+void Window::removeProfil()
+{
+    QModelIndexList selection= m_view->selectionModel()->selectedRows(0);
+
+    if(!selection.isEmpty())
+    {
+        QModelIndex idIndex= selection.at(0);
+        QString name= idIndex.sibling(idIndex.row(), m_model->fieldIndex("Nom")).data().toString();
+
+        QMessageBox::StandardButton deleteButton;
+        deleteButton= QMessageBox::question(this, "Delete Profil", QString("Are you sure you want to "
+                                                                        "delete '%1'?")
+                                         .arg(name),
+                                         QMessageBox::Yes | QMessageBox::No);
+        if(deleteButton== QMessageBox::Yes){
+            deleteProfilFromDatabase(idIndex);
+        }
+    }
+    else{
+        QMessageBox::information(this, "Delete Profil", "Select the profil you want to delete.");
+    }
+
+}
+
+void Window::deleteProfilFromDatabase(QModelIndex index)
+{
+    m_model->removeRow( index.row());
+    qDebug() << "Suppresion du profil id:" << index.row();
 }

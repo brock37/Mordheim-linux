@@ -267,7 +267,7 @@ int AddRowDialog::addNewProfil( int rangId, int raceId, QString nom, QMap<QStrin
 
     bool insert= m_model->insertRecord(-1, record);
     if(!insert)
-        qDebug()<< "Ajout Profil \nErreur insertion: " << m_model->lastError().text();
+        qDebug()<< "Ajout Profil Erreur insertion: " << m_model->lastError().text();
     else
         qDebug() << "Ajout a la base";
     return id;
