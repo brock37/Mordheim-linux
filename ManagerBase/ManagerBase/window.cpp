@@ -246,12 +246,22 @@ QDialogButtonBox *Window::createEditDatabaseButtonBox()
 void Window::createMenuBar()
 {
     QAction *addProfilAction= new QAction(tr("&Add profil"), this);
+    QAction *deleteProfilAction= new QAction(tr("&Delete profil"), this);
+    QAction *quitAction= new QAction(tr("&Quit"), this);
 
     addProfilAction->setShortcut(tr("Ctrl+A"));
+    deleteProfilAction->setShortcut(tr("Ctrl+D"));
+    quitAction->setShortcut(tr("Ctrl+Q"));
 
     QMenu *fileMenu= menuBar()->addMenu(tr("&File"));
     fileMenu->addAction(addProfilAction);
+    fileMenu->addAction(deleteProfilAction);
+    fileMenu->addSeparator();
+    fileMenu->addAction(quitAction);
+
 
     connect(addProfilAction, SIGNAL(triggered(bool)), this, SLOT(addProfil()));
+    connect(deleteProfilAction, SIGNAL(triggered(bool)), this, SLOT(removeProfil()));
+    connect(quitAction, SIGNAL(triggered(bool)), this, SLOT(close()));
 
 }
