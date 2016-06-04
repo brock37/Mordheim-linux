@@ -4,7 +4,7 @@ extern int uniqueRaceId;
 extern int uniqueProfilId;
 
 Window::Window(QWidget *parent) :
-    QWidget(parent)
+    QMainWindow(parent)
 {
 
     setupModel();
@@ -16,6 +16,7 @@ Window::Window(QWidget *parent) :
 
     m_view= new QTableView;
     m_view->setModel( m_model);
+    m_view->hideColumn(0);
     m_view->resizeColumnsToContents();
 
     QDialogButtonBox *editButton= createEditDatabaseButtonBox();
@@ -26,7 +27,12 @@ Window::Window(QWidget *parent) :
     m_layout->addWidget( box);
     m_layout->addWidget(m_view);
     m_layout->addWidget( editButton);
-    this->setLayout( m_layout);
+
+    QWidget *widget= new QWidget;
+    widget->setLayout(m_layout);
+
+    setCentralWidget( widget);
+
 
     this->resize(920,600);
 
@@ -174,7 +180,6 @@ void Window::setFilter(QString raceFilter, QString rangFilter, QString nameFilte
             filter.append(QString(" AND Nom='%1'").arg(nameFilter));
         }
     }
-
 
     qDebug() << QString("Filter: '%1'").arg(filter);
 

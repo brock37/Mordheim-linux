@@ -2,6 +2,7 @@
 #define WINDOW_H
 
 #include <QtWidgets>
+#include <QMainWindow>
 #include <QWidget>
 #include <QSqlRelationalTableModel>
 #include <QSqlDatabase>
@@ -11,7 +12,7 @@
 //#include "basemanager.h"
 
 
-class Window : public QWidget
+class Window : public QMainWindow
 {
     Q_OBJECT
 
