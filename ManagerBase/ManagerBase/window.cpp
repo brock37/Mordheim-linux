@@ -31,6 +31,8 @@ Window::Window(QWidget *parent) :
     QWidget *widget= new QWidget;
     widget->setLayout(m_layout);
 
+    createMenuBar();
+
     setCentralWidget( widget);
 
 
@@ -38,6 +40,101 @@ Window::Window(QWidget *parent) :
 
 }
 
+
+void Window::resetBoxFilter()
+{
+    m_raceComboBox->setCurrentIndex(-1);
+    m_rangComboBox->setCurrentIndex(-1);
+    m_nomEdit->clear();
+
+    m_model->setFilter("");
+}
+
+void Window::setFilter(QString raceFilter, QString rangFilter, QString nameFilter)
+{
+    QString filter;
+
+    if( raceFilter != ""){
+        filter.append(QString("nom_race='%1'").arg(raceFilter));
+    }
+
+    if(!rangFilter.isEmpty()){
+        if(filter.isEmpty()){
+            filter.append(QString("nom_rang='%1'").arg(rangFilter));
+        }
+        else{
+            filter.append(QString("AND nom_rang='%1'").arg(rangFilter));
+        }
+    }
+
+    if(!nameFilter.isEmpty()){
+        if(filter.isEmpty()){
+            filter.append(QString("Nom='%1'").arg(nameFilter));
+        }
+        else{
+            filter.append(QString(" AND Nom='%1'").arg(nameFilter));
+        }
+    }
+
+    qDebug() << QString("Filter: '%1'").arg(filter);
+
+
+    m_model->setFilter( filter);
+}
+
+
+void Window::applyFilter()
+{
+    setFilter(m_raceComboBox->currentText(), m_rangComboBox->currentText(), m_nomEdit->text());
+}
+
+void Window::resetFilter()
+{
+    resetBoxFilter();
+}
+
+void Window::addProfil()
+{
+    AddRowDialog* dialog= new AddRowDialog(m_model , this);
+    int accepted= dialog->exec();
+
+    if(accepted == 1){
+        int lastRow = m_model->rowCount() - 1;
+        m_view->selectRow(lastRow);
+        m_view->scrollToBottom();
+    }
+    qDebug() << m_model->lastError().text();
+}
+
+void Window::removeProfil()
+{
+    QModelIndexList selection= m_view->selectionModel()->selectedRows(0);
+
+    if(!selection.isEmpty())
+    {
+        QModelIndex idIndex= selection.at(0);
+        QString name= idIndex.sibling(idIndex.row(), m_model->fieldIndex("Nom")).data().toString();
+
+        QMessageBox::StandardButton deleteButton;
+        deleteButton= QMessageBox::question(this, "Delete Profil", QString("Are you sure you want to "
+                                                                        "delete '%1'?")
+                                         .arg(name),
+                                         QMessageBox::Yes | QMessageBox::No);
+        if(deleteButton== QMessageBox::Yes){
+            deleteProfilFromDatabase(idIndex);
+        }
+    }
+    else{
+        QMessageBox::information(this, "Delete Profil", "Select the profil you want to delete.");
+    }
+
+}
+
+void Window::deleteProfilFromDatabase(QModelIndex index)
+{
+    m_model->removeRow( index.row());
+    qDebug() << "Suppresion du profil id:" << index.row();
+}
 
 void Window::setupModel()
 {
@@ -146,97 +243,15 @@ QDialogButtonBox *Window::createEditDatabaseButtonBox()
     return buttonBox;
 }
 
-void Window::resetBoxFilter()
+void Window::createMenuBar()
 {
-    m_raceComboBox->setCurrentIndex(-1);
-    m_rangComboBox->setCurrentIndex(-1);
-    m_nomEdit->clear();
+    QAction *addProfilAction= new QAction(tr("&Add profil"), this);
 
-    m_model->setFilter("");
-}
+    addProfilAction->setShortcut(tr("Ctrl+A"));
 
-void Window::setFilter(QString raceFilter, QString rangFilter, QString nameFilter)
-{
-    QString filter;
+    QMenu *fileMenu= menuBar()->addMenu(tr("&File"));
+    fileMenu->addAction(addProfilAction);
 
-    if( raceFilter != ""){
-        filter.append(QString("nom_race='%1'").arg(raceFilter));
-    }
+    connect(addProfilAction, SIGNAL(triggered(bool)), this, SLOT(addProfil()));
 
-    if(!rangFilter.isEmpty()){
-        if(filter.isEmpty()){
-            filter.append(QString("nom_rang='%1'").arg(rangFilter));
-        }
-        else{
-            filter.append(QString("AND nom_rang='%1'").arg(rangFilter));
-        }
-    }
-
-    if(!nameFilter.isEmpty()){
-        if(filter.isEmpty()){
-            filter.append(QString("Nom='%1'").arg(nameFilter));
-        }
-        else{
-            filter.append(QString(" AND Nom='%1'").arg(nameFilter));
-        }
-    }
-
-    qDebug() << QString("Filter: '%1'").arg(filter);
-
-
-    m_model->setFilter( filter);
-}
-
-
-void Window::applyFilter()
-{
-    setFilter(m_raceComboBox->currentText(), m_rangComboBox->currentText(), m_nomEdit->text());
-}
-
-void Window::resetFilter()
-{
-    resetBoxFilter();
-}
-
-void Window::addProfil()
-{
-    AddRowDialog* dialog= new AddRowDialog(m_model , this);
-    int accepted= dialog->exec();
-
-    if(accepted == 1){
-        int lastRow = m_model->rowCount() - 1;
-        m_view->selectRow(lastRow);
-        m_view->scrollToBottom();
-    }
-    qDebug() << m_model->lastError().text();
-}
-
-void Window::removeProfil()
-{
-    QModelIndexList selection= m_view->selectionModel()->selectedRows(0);
-
-    if(!selection.isEmpty())
-    {
-        QModelIndex idIndex= selection.at(0);
-        QString name= idIndex.sibling(idIndex.row(), m_model->fieldIndex("Nom")).data().toString();
-
-        QMessageBox::StandardButton deleteButton;
-        deleteButton= QMessageBox::question(this, "Delete Profil", QString("Are you sure you want to "
-                                                                        "delete '%1'?")
-                                         .arg(name),
-                                         QMessageBox::Yes | QMessageBox::No);
-        if(deleteButton== QMessageBox::Yes){
-            deleteProfilFromDatabase(idIndex);
-        }
-    }
-    else{
-        QMessageBox::information(this, "Delete Profil", "Select the profil you want to delete.");
-    }
-
-}
-
-void Window::deleteProfilFromDatabase(QModelIndex index)
-{
-    m_model->removeRow( index.row());
-    qDebug() << "Suppresion du profil id:" << index.row();
 }
