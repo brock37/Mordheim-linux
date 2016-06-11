@@ -18,6 +18,11 @@ Window::Window(QWidget *parent) :
     m_view->setModel( m_model);
     m_view->hideColumn(0);
     m_view->resizeColumnsToContents();
+    m_view->setSelectionBehavior(QAbstractItemView::SelectRows);
+    m_view->setSelectionMode(QAbstractItemView::SingleSelection);
+    m_view->setShowGrid(false);
+    m_view->setAlternatingRowColors(true);
+    m_view->setSortingEnabled(true);
 
     QDialogButtonBox *editButton= createEditDatabaseButtonBox();
 
