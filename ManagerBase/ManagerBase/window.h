@@ -5,7 +5,7 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <QSqlRelationalTableModel>
-#include <QSqlDatabase>
+
 #include <QSqlRelationalDelegate>
 
 #include "addrowdialog.h"
@@ -23,10 +23,11 @@ public:
     QDialogButtonBox *createFilterButtonBox();
     QDialogButtonBox *createEditDatabaseButtonBox();
     void createMenuBar();
+
     void setFilter(QString raceFilter="", QString rangFilter="", QString nameFilter="");
     void resetBoxFilter();
-    QString getRaceFilter(int index);
-    QString getRangFilter(int index);
+
+
     void deleteProfilFromDatabase(QModelIndex index);
 
 signals:

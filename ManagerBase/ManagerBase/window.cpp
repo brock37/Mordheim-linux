@@ -138,21 +138,6 @@ void Window::deleteProfilFromDatabase(QModelIndex index)
 
 void Window::setupModel()
 {
-    QSqlDatabase db= QSqlDatabase::addDatabase("QMYSQL");
-    db.setHostName("localhost");
-    db.setDatabaseName("Mordheim");
-    db.setUserName("florent");
-    db.setPassword("azerty");
-
-    if(!db.open())
-    {
-        QMessageBox::critical(0, "Cannot open database",
-                    "Unable to establish a database connection.\n"
-                       "This example needs SQLite support. Please read "
-                       "the Qt SQL driver documentation for information how "
-                       "to build it.", QMessageBox::Cancel);
-                return;
-    }
 
     m_model= new QSqlRelationalTableModel(this);
     m_model->setTable("ref_profil");
