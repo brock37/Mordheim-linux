@@ -8,7 +8,8 @@
 
 #include <QSqlRelationalDelegate>
 
-#include "addrowdialog.h"
+#include "addprofildialog.h"
+#include "connectiondialog.h"
 //#include "basemanager.h"
 
 

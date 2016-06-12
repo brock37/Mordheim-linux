@@ -19,12 +19,12 @@
 #include <QComboBox>
 #include <QMessageBox>
 
-class AddRowDialog : public QDialog
+class AddProfilDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit AddRowDialog( QSqlRelationalTableModel *profil, QWidget *parent = 0);
+    explicit AddProfilDialog( QSqlRelationalTableModel *profil, QWidget *parent = 0);
     QGroupBox* createInputsWidget();
     QGroupBox* createIdInputsWidget();
     QDialogButtonBox* createButtonBox();

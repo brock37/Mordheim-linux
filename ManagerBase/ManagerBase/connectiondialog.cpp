@@ -6,6 +6,7 @@ ConnectionDialog::ConnectionDialog(QWidget *parent) :
     QGroupBox *inputBox= creatInputWidget();
     QDialogButtonBox *buttonBox= createButtonBox();
 
+    readSettings();
 
     QVBoxLayout *layout= new QVBoxLayout;
     layout->addWidget(inputBox);
@@ -36,10 +37,10 @@ QDialogButtonBox *ConnectionDialog::createButtonBox(){
     QPushButton *connectButton= new QPushButton("Connect");
     QPushButton *closeButton= new QPushButton("Close");
 
-    closeButton->setDefault( true);
+    connectButton->setDefault( true);
 
     connect(connectButton, SIGNAL(clicked()), this, SLOT(connectToBDD()));
-    //connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
 
     QDialogButtonBox *buttonBox= new QDialogButtonBox;
     buttonBox->addButton(connectButton, QDialogButtonBox::AcceptRole);
@@ -55,6 +56,7 @@ void ConnectionDialog::connectToBDD()
 
     bool connected= createConnection(id, password);
     if( connected){
+        writeSettings();
         accept();
     }
     else{
@@ -81,4 +83,23 @@ bool ConnectionDialog::createConnection(QString id, QString password)
     }
 
     return true;
+}
+
+void ConnectionDialog::readSettings(){
+
+    QSettings settings("Mordheim", "ManagerBase");
+
+    settings.beginGroup("Connection dialog");
+    m_id->setText( settings.value("id", "").toString());
+    m_password->setText( settings.value("password", "").toString());
+    settings.endGroup();
+}
+
+void ConnectionDialog::writeSettings(){
+
+    QSettings settings("Mordheim", "ManagerBase");
+    settings.beginGroup("Connection dialog");
+    settings.setValue("id", m_id->text());
+    settings.setValue("password", m_password->text());
+    settings.endGroup();
 }

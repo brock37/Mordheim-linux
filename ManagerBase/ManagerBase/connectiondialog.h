@@ -11,6 +11,7 @@
 #include <QLineEdit>
 #include <QPushButton>
 #include <QString>
+#include <QSettings>
 
 class ConnectionDialog : public QDialog
 {
@@ -20,6 +21,8 @@ public:
     QDialogButtonBox *createButtonBox();
     QGroupBox *creatInputWidget();
     bool createConnection(QString id, QString password);
+    void readSettings();
+    void writeSettings();
 
 
 signals:

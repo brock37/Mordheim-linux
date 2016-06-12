@@ -1,9 +1,9 @@
-#include "addrowdialog.h"
+#include "addprofildialog.h"
 
 int uniqueRaceId;
 int uniqueProfilId;
 
-AddRowDialog::AddRowDialog(QSqlRelationalTableModel *profil, QWidget *parent) :
+AddProfilDialog::AddProfilDialog(QSqlRelationalTableModel *profil, QWidget *parent) :
     QDialog(parent)
 {
     m_model= profil;
@@ -21,7 +21,7 @@ AddRowDialog::AddRowDialog(QSqlRelationalTableModel *profil, QWidget *parent) :
     setWindowTitle("Ajouter Profil");
 }
 
-QGroupBox *AddRowDialog::createInputsWidget()
+QGroupBox *AddProfilDialog::createInputsWidget()
 {
     QGroupBox *box= new QGroupBox("Caracteristiques");
 
@@ -79,7 +79,7 @@ QGroupBox *AddRowDialog::createInputsWidget()
     return box;
 }
 
-QGroupBox *AddRowDialog::createIdInputsWidget()
+QGroupBox *AddProfilDialog::createIdInputsWidget()
 {
     QGroupBox *box= new QGroupBox("Identite");
 
@@ -122,7 +122,7 @@ QGroupBox *AddRowDialog::createIdInputsWidget()
 }
 
 
-QDialogButtonBox* AddRowDialog::createButtonBox()
+QDialogButtonBox* AddProfilDialog::createButtonBox()
 {
     QPushButton *submitButton= new QPushButton("Submit");
     QPushButton *closeButton= new QPushButton("Close");
@@ -140,7 +140,7 @@ QDialogButtonBox* AddRowDialog::createButtonBox()
 
 }
 
-int AddRowDialog::findRaceId(QString race)
+int AddProfilDialog::findRaceId(QString race)
 {
     QSqlTableModel *model= m_model->relationModel(m_model->fieldIndex("nom_race"));
     int index= 0;
@@ -160,7 +160,7 @@ int AddRowDialog::findRaceId(QString race)
     return idRace;
 }
 
-int AddRowDialog::findRangId(QString rang)
+int AddProfilDialog::findRangId(QString rang)
 {
     QSqlTableModel *model= m_model->relationModel(m_model->fieldIndex("nom_rang"));
     int index= 0;
@@ -177,7 +177,7 @@ int AddRowDialog::findRangId(QString rang)
 }
 
 
-int AddRowDialog::addNewRace(QString race)
+int AddProfilDialog::addNewRace(QString race)
 {
     QSqlTableModel *raceModel= m_model->relationModel(m_model->fieldIndex("nom_race"));
     QSqlRecord record;
@@ -205,7 +205,7 @@ return id;
 }
 
 
-int AddRowDialog::addNewProfil( int rangId, int raceId, QString nom, QMap<QString, int> input)
+int AddProfilDialog::addNewProfil( int rangId, int raceId, QString nom, QMap<QString, int> input)
 {
     int id=generateProfilId();
 
@@ -272,7 +272,7 @@ int AddRowDialog::addNewProfil( int rangId, int raceId, QString nom, QMap<QStrin
     return id;
 }
 
-QMap<QString, int> AddRowDialog::getFeatures()
+QMap<QString, int> AddProfilDialog::getFeatures()
 {
     QMap<QString, int> features;
 
@@ -291,7 +291,7 @@ QMap<QString, int> AddRowDialog::getFeatures()
 }
 
 
-void AddRowDialog::submit()
+void AddProfilDialog::submit()
 {
     QString nom_race= raceCombo->currentText();
     QString nom_rang= rangCombo->currentText();
@@ -312,13 +312,13 @@ void AddRowDialog::submit()
     }
 }
 
-int AddRowDialog::generateRaceId()
+int AddProfilDialog::generateRaceId()
 {
     uniqueRaceId += 1;
     return uniqueRaceId;
 }
 
-int AddRowDialog::generateProfilId()
+int AddProfilDialog::generateProfilId()
 {
     uniqueProfilId += 1;
     return uniqueProfilId;

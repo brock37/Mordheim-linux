@@ -100,7 +100,7 @@ void Window::resetFilter()
 
 void Window::addProfil()
 {
-    AddRowDialog* dialog= new AddRowDialog(m_model , this);
+    AddProfilDialog* dialog= new AddProfilDialog(m_model , this);
     int accepted= dialog->exec();
 
     if(accepted == 1){
