@@ -22,6 +22,7 @@ QGroupBox *ConnectionDialog::creatInputWidget(){
 
     m_id= new QLineEdit;
     m_password= new QLineEdit;
+    m_password->setEchoMode( QLineEdit::Password);
 
 
     QFormLayout *layout= new QFormLayout;
